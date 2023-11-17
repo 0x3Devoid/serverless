@@ -36,7 +36,7 @@ class userAuthentication {
         //   sessions[sessionId] = { };
         //   res.set('Set-Cookie', `session=${sessionId}`);
         const sessionId = uuidv4();
-        res.cookie('session', sessionId, { httpOnly: true });
+        res.cookie('session', sessionId, { httpOnly: true, sameSite: 'Lax' });
         res.cookie('user', JSON.stringify({
           email: user.local.email,
           username: user.local.username,
