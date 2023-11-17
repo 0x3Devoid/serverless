@@ -20,11 +20,11 @@ router.use(cors({
 router.use(express.json());
 router.use(cookie());
 
-router.get('/v1', UserController.app);
+router.get('/v1', UserController.app); //
 router.post('/login', userAuthentication.login);
 router.post('/register', userAuthentication.register);
 router.get('/logout', userAuthentication.logout);
-router.get('/user/:email', currentUserController.getUser);
+router.get('/user/:email', currentUserController.getUser); //
 router.post('/user/referal',  currentUserController.getReferals);
 router.post('/user/claim',  Claiming.dailyClaiming);
 router.post('/user/referal/claim', Claiming.referalClaim);

@@ -1,8 +1,21 @@
 const dbClient = require("../storage/db");
 
+const sessions = {}
+
 class currentUserController {
   static async getUser(req, res) {
+    const cookies = req.headers.cookie;
+
+    if (!cookies) {
+      return res.status(401).json({ error: "No cookies found" });
+    }
+    const sessionId = cookies.split('=')[1];
     const collection = await dbClient.db.collection("Users");
+
+    if(!sessionId) {
+     return res.status(401).json({error: "User not Authorized"});
+    }
+
     try {
       const email = req.params.email;
       if (!email) {

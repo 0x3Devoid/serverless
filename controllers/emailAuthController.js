@@ -1,10 +1,10 @@
 const dbClient = require("../storage/db");
-const createToken = require("../utils/generateJWT");
+// const createToken = require("../utils/generateJWT");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
+const uuidv4 = require("uuid").v4
 
-
-
+const sessions = {}
 dotenv.config();
 const salt = bcrypt.genSaltSync(10);
 
@@ -31,15 +31,18 @@ class userAuthentication {
         const validPwd = await bcrypt.compareSync(password, user.local.password);
         if (!validPwd) {
           return res.status(401).json({ error: "Invalid password" });
-        }else{
-          const accessToken = createToken(user);
-          res.cookie('access-token', accessToken, {
-            maxAge: 60 * 60 * 24 * 30 * 1000,
-            httpOnly: true,
-            sameSite: "None",
-            secure: true,
-          });
         }
+        // const sessionId = uuidv4();
+        //   sessions[sessionId] = { };
+        //   res.set('Set-Cookie', `session=${sessionId}`);
+        const sessionId = uuidv4();
+        res.cookie('session', sessionId, { httpOnly: true });
+        res.cookie('user', JSON.stringify({
+          email: user.local.email,
+          username: user.local.username,
+         
+        }));
+        
         
         return res.status(200).json({ message: "User logged in successfully" });
       } catch (error) {
@@ -50,22 +53,14 @@ class userAuthentication {
   }
 
   static async logout(req, res) {
-    const refreshToken = req.cookies.jwt;
-  
-    if (!refreshToken) {
-      // If the JWT cookie is not found, the user is not logged in
-      return res.status(204).json({ message: "User is already logged out" });
-    }
-  
-    const collection = await dbClient.db.collection('Users');
-  
     try {
-      // Clear the JWT cookie
-      res.clearCookie('access-token', { httpOnly: true, sameSite: 'None', secure: true });
-      return res.status(204).json({ message: "User logged out successfully" });
+      res.clearCookie('session');
+      res.clearCookie('user');
+  
+      return res.status(200).json({ message: "User logged out successfully" });
     } catch (error) {
-      console.log(error);
-      return res.status(500).json({ error });
+      console.error(error);
+      return res.status(500).json({ error: "Internal Server Error" });
     }
   }
   
