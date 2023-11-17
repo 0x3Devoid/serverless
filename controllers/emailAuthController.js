@@ -1,5 +1,5 @@
 const dbClient = require("../storage/db");
-const generateJWT = require("../utils/generateJWT");
+const createToken = require("../utils/generateJWT");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
 
@@ -31,29 +31,14 @@ class userAuthentication {
         const validPwd = await bcrypt.compareSync(password, user.local.password);
         if (!validPwd) {
           return res.status(401).json({ error: "Invalid password" });
+        }else{
+          const accessToken = createToken(user);
+          res.cookie('access-token', accessToken, {
+            maxAge: 60 * 60 * 24 * 30 * 1000,
+            httpOnly: true,
+          });
         }
-        const accessToken = generateJWT({
-          email: user.local.email, // Access the email using "user.local.email"
-          username: user.local.username,
-          id: user._id.toString(), // Convert ObjectId to string
-          duration: "5m",
-        });
-        const refreshToken = generateJWT({
-          email: user.local.email,
-          username: user.local.username,
-          id: user._id.toString(),
-          duration: "1d",
-        });
-        user.lastLogin = new Date();
-        user.refreshToken = refreshToken;
-        await collection.updateOne({ _id: user._id }, { $set: user });
-      
-        res.cookie("jwt", refreshToken, {
-          httpOnly: true,
-          maxAge: 24 * 3600 * 1000,
-          sameSite: "None",
-          secure: true,
-        });
+        
         return res.status(200).json({ message: "User logged in successfully" });
       } catch (error) {
         console.log(error);

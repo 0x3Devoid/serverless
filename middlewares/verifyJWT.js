@@ -1,16 +1,16 @@
-const jwt = require("jsonwebtoken");
+const { verify } = require('jsonwebtoken');
 const dotenv = require("dotenv");
 
 dotenv.config();
 
 const verifyJWT = (req, res, next) => {
-  if (req.cookies && req.cookies["jwt"]) {
-    const accessToken = req.cookies["jwt"];
+  if (req.cookies && req.cookies["access-token"]) {
+    const accessToken = req.cookies["access-token"];
     if (!accessToken) {
       res.status(401).json({ error: "Not authenticated" });
     }
     try {
-      jwt.verify(accessToken, process.env.TOKEN_SECRETE, (err, decoded) => {
+      verify(accessToken, process.env.SECRET, (err, decoded) => {
         if (err) {
           return res
             .status(403)
