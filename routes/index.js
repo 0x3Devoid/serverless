@@ -20,14 +20,14 @@ router.use(cors({
 router.use(express.json());
 router.use(cookie());
 
-router.get('/v1', verifyJWT, UserController.app);
+router.get('/v1', UserController.app);
 router.post('/login', userAuthentication.login);
 router.post('/register', userAuthentication.register);
 router.get('/logout', userAuthentication.logout);
-router.get('/user/:email', verifyJWT, currentUserController.getUser);
-router.post('/user/referal', verifyJWT, currentUserController.getReferals);
-router.post('/user/claim', verifyJWT, Claiming.dailyClaiming);
-router.post('/user/referal/claim', verifyJWT, Claiming.referalClaim);
+router.get('/user/:email', currentUserController.getUser);
+router.post('/user/referal',  currentUserController.getReferals);
+router.post('/user/claim',  Claiming.dailyClaiming);
+router.post('/user/referal/claim', Claiming.referalClaim);
 router.get('/leaderboard',leaderBoard);
 
 module.exports = router
