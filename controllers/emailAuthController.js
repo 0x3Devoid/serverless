@@ -60,20 +60,8 @@ class userAuthentication {
     const collection = await dbClient.db.collection('Users');
   
     try {
-      const user = await collection.findOne({ "local.refreshToken": refreshToken });
-  
-      if (!user) {
-        // If the user with the provided refreshToken is not found, it's safe to assume the user is already logged out
-        res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
-        return res.status(204).json({ message: "User is already logged out" });
-      }
-  
-      // Clear the refreshToken
-      user.local.refreshToken = '';
-      await collection.updateOne({ _id: user._id }, { $set: user });
-  
       // Clear the JWT cookie
-      res.clearCookie('jwt', { httpOnly: true, sameSite: 'None', secure: true });
+      res.clearCookie('access-token', { httpOnly: true, sameSite: 'None', secure: true });
       return res.status(204).json({ message: "User logged out successfully" });
     } catch (error) {
       console.log(error);

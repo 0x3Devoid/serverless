@@ -4,7 +4,7 @@ class currentUserController {
   static async getUser(req, res) {
     const collection = await dbClient.db.collection("Users");
     try {
-      const email = req.body.email;
+      const email = req.params.email;
       if (!email) {
         return res.status(400).json({ error: "missing email" });
       }

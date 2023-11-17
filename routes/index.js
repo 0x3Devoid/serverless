@@ -24,10 +24,10 @@ router.get('/v1', verifyJWT, UserController.app);
 router.post('/login', userAuthentication.login);
 router.post('/register', userAuthentication.register);
 router.get('/logout', userAuthentication.logout);
-router.post('/user', verifyJWT, currentUserController.getUser);
+router.get('/user/:email', verifyJWT, currentUserController.getUser);
 router.post('/user/referal', verifyJWT, currentUserController.getReferals);
 router.post('/user/claim', verifyJWT, Claiming.dailyClaiming);
 router.post('/user/referal/claim', verifyJWT, Claiming.referalClaim);
-router.get('/leaderboard', verifyJWT, leaderBoard);
+router.get('/leaderboard',leaderBoard);
 
 module.exports = router
