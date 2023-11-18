@@ -51,8 +51,28 @@ class userAuthentication {
   }
 
   static async logout(req, res) {
-    
-  }
+    const email = req.params.email;
+
+
+    if (!email) {
+        return res.status(401).json({ error: "User not authenticated" });
+    }
+
+    const collection = await dbClient.db.collection('Users');
+
+    try {
+        await collection.updateOne(
+            { "local.email": email },
+            { $unset: { refreshToken: 1 } }
+        );
+
+        return res.status(200).json({ message: "User logged out successfully" });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
+
   
 
   //DONE

@@ -23,7 +23,7 @@ router.use(cookie());
 router.get('/v1/:email', verifyJWT, UserController.app); //
 router.post('/login', userAuthentication.login);
 router.post('/register', userAuthentication.register);
-router.get('/logout', userAuthentication.logout);
+router.get('/logout/:email', userAuthentication.logout);
 router.get('/user/:email', verifyJWT, currentUserController.getUser); //
 router.post('/user/referal',  currentUserController.getReferals);
 router.post('/user/claim',  Claiming.dailyClaiming);
