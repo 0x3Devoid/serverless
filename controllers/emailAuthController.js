@@ -1,13 +1,10 @@
 const dbClient = require("../storage/db");
-// const createToken = require("../utils/generateJWT");
+const generateJWT = require("../utils/generateJWT");
 const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
-const uuidv4 = require("uuid").v4
 
-const sessions = {}
 dotenv.config();
 const salt = bcrypt.genSaltSync(10);
-
 class userAuthentication {
   static async login(req, res) {
     const { email, password } = req.body;
@@ -32,18 +29,19 @@ class userAuthentication {
         if (!validPwd) {
           return res.status(401).json({ error: "Invalid password" });
         }
-        // const sessionId = uuidv4();
-        //   sessions[sessionId] = { };
-        //   res.set('Set-Cookie', `session=${sessionId}`);
-        const sessionId = uuidv4();
-        res.cookie('session', sessionId, { httpOnly: true, sameSite: 'Lax' });
-        res.cookie('user', JSON.stringify({
-          email: user.local.email,
-          username: user.local.username,
-         
-        }));
-        
-        
+        const refreshToken = generateJWT({ email: user.email, username: user.username, id: user._id, duration: "1d" });
+        user.lastLogin = new Date();
+        user.refreshToken = refreshToken;
+
+        await collection.updateOne(
+          { "local.email": email },
+          {
+            $set: {
+              refreshToken: refreshToken,
+              lastLogin: new Date()
+            }
+          }
+        );  
         return res.status(200).json({ message: "User logged in successfully" });
       } catch (error) {
         console.log(error);
@@ -53,15 +51,7 @@ class userAuthentication {
   }
 
   static async logout(req, res) {
-    try {
-      res.clearCookie('session');
-      res.clearCookie('user');
-  
-      return res.status(200).json({ message: "User logged out successfully" });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
+    
   }
   
 
