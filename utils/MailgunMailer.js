@@ -53,4 +53,4 @@ async function sendVerificationMail(to, link) {
 }
 module.exports = sendVerificationMail;
 
-// sendVerificationMail("owoyemiidrisolamilekan@gmail.com", 'devoid.com');
+
