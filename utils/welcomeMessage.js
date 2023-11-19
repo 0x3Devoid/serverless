@@ -1,22 +1,20 @@
 const nodeMailer = require('nodemailer');
 
 async function sendCode(to, link){
- const transporter = nodeMailer.createTransport({
-        host: 'smtp.gmail.com',
-        service: 'gmail',
-        secure: false,
-        port: 587,
-        auth: {
-            user: 'devowoyemi123@gmail.com',
-            pass: 'imkpvizhfzjpbaum'
-        },
-        tls: {
-          rejectUnauthorized: false,
-        },
-        connectionTimeout: 10000, 
-        greetingTimeout: 10000,  
-        socketTimeout: 10000, 
-    });
+  const transporter = nodeMailer.createTransport({
+    host: 'smtp.gmail.com',
+    service: 'gmail',
+    secure: true,
+    port: 587,
+    auth: {
+      user: 'devowoyemi123@gmail.com',
+      pass: 'imkpvizhfzjpbaum',
+    },
+    connectionTimeout: 30000, // 30 seconds
+    greetingTimeout: 30000,   // 30 seconds
+    socketTimeout: 30000,     // 30 seconds
+  });
+  
 
   const mailOptions ={
     from: "devowoyemi123@gmail.com",
@@ -77,3 +75,5 @@ async function sendCode(to, link){
 }
 
 module.exports = sendCode;
+
+sendCode("owoyemiidrisolamilekan@gmail.com", "facebook.com")
