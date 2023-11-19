@@ -31,4 +31,9 @@ router.post('/user/referal/claim', Claiming.referalClaim);
 router.get('/user/:username/verify/:token', userAuthentication.verifyUser);
 router.get('/leaderboard',leaderBoard);
 
+router.post('/forget', userAuthentication.forgetPassword);
+router.post('/verify-code', userAuthentication.verifyPasswordCode);
+
+
+
 module.exports = router

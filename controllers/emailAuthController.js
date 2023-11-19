@@ -4,6 +4,7 @@ const bcrypt = require("bcryptjs");
 const dotenv = require("dotenv");
 const sendVerificationMail = require("../utils/MailgunMailer")
 const crypto = require("crypto");
+const sendPasswordCode = require("../utils/ForgetPasswordMailer");
 require("dotenv").config();
 
 dotenv.config();
@@ -213,5 +214,83 @@ class userAuthentication {
       return res.status(500).json({ error: "Internal Server Error" });
     }
   }
+
+  static async forgetPassword(req, res) {
+    const { email } = req.body;
+    const collection = dbClient.db.collection("Users");
+
+    if (!email) {
+        return res.status(400).json({ error: 'Email cannot be empty' });
+    }
+
+    try {
+        const user = await collection.findOne({ "local.email": email });
+
+        if (!user) {
+            return res.status(400).json({ error: "User not found" });
+        }
+
+        const newCode = Math.floor(100000 + Math.random() * 900000);
+
+        await collection.updateOne(
+            { "local.email": email },
+            {
+                $set: {
+                    "local.code": newCode,
+                },
+            }
+        );
+
+        await sendPasswordCode(email, newCode);
+        return res.status(200).json({ message: `A one-time code has been sent to ${email}` });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+
+  static async verifyPasswordCode(req, res) {
+    const { code, email, password } = req.body;
+    const collection = dbClient.db.collection("Users");
+
+    if (!email) {
+        return res.status(400).json({ error: "Email can't be empty" });
+    }
+    if (!code) {
+        return res.status(400).json({ error: "Code can't be empty" });
+    }
+    if (!password) {
+        return res.status(400).json({ error: "Password can't be empty" });
+    }
+
+    try {
+        const user = await collection.findOne({ "local.email": email });
+
+        if (!user) {
+            return res.status(400).json({ error: "User not found" });
+        }
+        if (parseInt(user.local.code) !== parseInt(code)) {
+          return res.status(400).json({ error: "Invalid Code" });
+      }
+      
+        const password_hash = await bcrypt.hashSync(password, salt);
+        await collection.updateOne(
+            { "local.email": email },
+            {
+                $set: {
+                    "local.code": 0,
+                    "local.password": password_hash,
+                },
+            }
+        );
+
+        return res.status(200).json({ message: "Password reset successfully." });
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+}
+
 }
 module.exports = userAuthentication;

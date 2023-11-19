@@ -9,8 +9,8 @@ async function sendCode(to, link) {
     // secure: true,
     // port: 587,
     auth: {
-      user: "devowoyemi123@gmail.com",
-      pass: "imkpvizhfzjpbaum",
+      user: "@gmail.com",
+      pass: "",
     },
     // connectionTimeout: 30000,
     // greetingTimeout: 30000,

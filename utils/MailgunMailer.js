@@ -6,7 +6,7 @@ async function sendVerificationMail(to, link) {
   const msg = {
     to: to,
     from: "helpchakraerc@gmail.com",
-    subject: "Subject",
+    subject: "Verification Link",
     html: ` <!DOCTYPE html>
         <html lang="en">
         <head>
