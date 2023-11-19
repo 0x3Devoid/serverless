@@ -28,7 +28,7 @@ router.get('/user/:email', verifyJWT, currentUserController.getUser); //
 router.post('/user/referal',  currentUserController.getReferals);
 router.post('/user/claim',  Claiming.dailyClaiming);
 router.post('/user/referal/claim', Claiming.referalClaim);
-router.post('/user/:username/verify/:token', userAuthentication.verifyUser);
+router.get('/user/:username/verify/:token', userAuthentication.verifyUser);
 router.get('/leaderboard',leaderBoard);
 
 module.exports = router
