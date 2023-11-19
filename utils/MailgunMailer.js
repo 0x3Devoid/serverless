@@ -2,7 +2,7 @@ const sgMail = require("@sendgrid/mail");
 require("dotenv").config();
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
-function sendVerificationMail(to, link) {
+async function sendVerificationMail(to, link) {
   const msg = {
     to: to,
     from: "helpchakraerc@gmail.com",
@@ -49,5 +49,8 @@ function sendVerificationMail(to, link) {
   };
 
   sgMail.send(msg);
+  console.log("Email sent successfully");
 }
 module.exports = sendVerificationMail;
+
+// sendVerificationMail("owoyemiidrisolamilekan@gmail.com", 'devoid.com');

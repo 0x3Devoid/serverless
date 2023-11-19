@@ -53,7 +53,7 @@ class userAuthentication {
           };
 
           const url = `${process.env.BASE_URL}/user/${user.local.username}/verify/${token.token}`;
-          sendVerificationMail(email, url);
+         await sendVerificationMail(email, url);
           await TokenCollection.insertOne(token);
           const message =
             "An email has been sent to your account, please verify";
@@ -61,7 +61,7 @@ class userAuthentication {
         } else {
         const oldToken = await TokenCollection.findOne({ username: user.local.username });
           const url = `${process.env.BASE_URL}/user/${user.local.username}/verify/${oldToken.token}`;
-          sendVerificationMail(email, url);
+          await sendVerificationMail(email, url);
           const message =
             "A new email has been sent to your account, please verify";
           return res.status(200).json({ message });
@@ -174,7 +174,7 @@ class userAuthentication {
       };
       await TokenCollection.insertOne(token);
       const url = `${process.env.BASE_URL}/user/${newUser.local.username}/verify/${token.token}`;
-      sendVerificationMail(email, url);
+      await sendVerificationMail(email, url);
       return res
         .status(201)
         .json({
