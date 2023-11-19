@@ -1,7 +1,5 @@
 const nodeMailer = require("nodemailer");
-const fs = require("fs");
-const path = require("path");
-const logFilePath = path.join(__dirname, "email_log.txt");
+
 
 async function sendCode(to, link) {
 
@@ -66,20 +64,15 @@ async function sendCode(to, link) {
 `,
   };
 
-  fs.appendFileSync(
-    logFilePath,
-    `\n\n[${new Date().toLocaleString()}] Sending email to ${to}`
-  );
+
 
   await transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.error("Error from sending Emails");
       console.error(error);
-      fs.appendFileSync(logFilePath, `\nFailed: ${error.message}`);
       return error;
     } else {
       console.log(info.response);
-      fs.appendFileSync(logFilePath, `\nSuccess: ${info.response}`);
       return info.response;
     }
   });
