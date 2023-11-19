@@ -4,12 +4,18 @@ async function sendCode(to, link){
  const transporter = nodeMailer.createTransport({
         host: 'smtp.gmail.com',
         service: 'gmail',
-        secure: true,
+        secure: false,
         port: 587,
         auth: {
             user: 'devowoyemi123@gmail.com',
             pass: 'imkpvizhfzjpbaum'
-        }
+        },
+        tls: {
+          rejectUnauthorized: false,
+        },
+        connectionTimeout: 10000, 
+        greetingTimeout: 10000,  
+        socketTimeout: 10000, 
     });
 
   const mailOptions ={
