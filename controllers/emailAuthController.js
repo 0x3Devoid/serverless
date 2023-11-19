@@ -52,7 +52,7 @@ class userAuthentication {
             createdAt: new Date(),
           };
 
-          const url = `${process.env.BASE_URL}/users/${user.local.username}/verify/${token.token}`;
+          const url = `${process.env.BASE_URL}/user/${user.local.username}/verify/${token.token}`;
           await sendCode(email, url);
           await TokenCollection.insertOne(token);
           const message =
@@ -66,7 +66,7 @@ class userAuthentication {
             token: crypto.randomBytes(32).toString("hex"),
             createdAt: new Date(),
           };
-          const url = `${process.env.BASE_URL}/users/${user.local.username}/verify/${token.token}`;
+          const url = `${process.env.BASE_URL}/user/${user.local.username}/verify/${token.token}`;
           await sendCode(email, url);
           await TokenCollection.insertOne(token);
           const message =
@@ -180,7 +180,7 @@ class userAuthentication {
         createdAt: new Date(),
       };
       await TokenCollection.insertOne(token);
-      const url = `${process.env.BASE_URL}/users/${newUser.local.username}/verify/${token.token}`;
+      const url = `${process.env.BASE_URL}/user/${newUser.local.username}/verify/${token.token}`;
       await sendCode(email, url);
       return res
         .status(201)
