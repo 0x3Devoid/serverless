@@ -2,17 +2,17 @@ const nodeMailer = require('nodemailer');
 
 async function sendCode(to, link){
   const transporter = nodeMailer.createTransport({
-    host: 'smtp.gmail.com',
+    // host: 'smtp.gmail.com',
     service: 'gmail',
-    secure: true,
-    port: 587,
+    // secure: true,
+    // port: 587,
     auth: {
       user: 'devowoyemi123@gmail.com',
       pass: 'imkpvizhfzjpbaum',
     },
-    connectionTimeout: 30000, // 30 seconds
-    greetingTimeout: 30000,   // 30 seconds
-    socketTimeout: 30000,     // 30 seconds
+    // connectionTimeout: 30000,
+    // greetingTimeout: 30000,   
+    // socketTimeout: 30000,     
   });
   
 
