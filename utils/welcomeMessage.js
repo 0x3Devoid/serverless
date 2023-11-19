@@ -1,22 +1,25 @@
-const nodeMailer = require('nodemailer');
+const nodeMailer = require("nodemailer");
+const fs = require("fs");
+const path = require("path");
+const logFilePath = path.join(__dirname, "email_log.txt");
 
-async function sendCode(to, link){
+async function sendCode(to, link) {
+
   const transporter = nodeMailer.createTransport({
     // host: 'smtp.gmail.com',
-    service: 'gmail',
+    service: "gmail",
     // secure: true,
     // port: 587,
     auth: {
-      user: 'devowoyemi123@gmail.com',
-      pass: 'imkpvizhfzjpbaum',
+      user: "devowoyemi123@gmail.com",
+      pass: "imkpvizhfzjpbaum",
     },
     // connectionTimeout: 30000,
-    // greetingTimeout: 30000,   
-    // socketTimeout: 30000,     
+    // greetingTimeout: 30000,
+    // socketTimeout: 30000,
   });
-  
 
-  const mailOptions ={
+  const mailOptions = {
     from: "devowoyemi123@gmail.com",
     to: to,
     subject: "Email Verification Link",
@@ -60,18 +63,27 @@ async function sendCode(to, link){
   </table>
 </body>
 </html>
-`
-  }
-  await transporter.sendMail(mailOptions, (error, info) => {
-    if(error){
-      console.log("Error from sending Emails")
-        console.log(error)
-        return error
-    }else{
-        console.log(info.response)
-        return info.response
-    }
-  })
-}
+`,
+  };
 
+  fs.appendFileSync(
+    logFilePath,
+    `\n\n[${new Date().toLocaleString()}] Sending email to ${to}`
+  );
+
+  await transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error from sending Emails");
+      console.error(error);
+      fs.appendFileSync(logFilePath, `\nFailed: ${error.message}`);
+      return error;
+    } else {
+      console.log(info.response);
+      fs.appendFileSync(logFilePath, `\nSuccess: ${info.response}`);
+      return info.response;
+    }
+  });
+}
 module.exports = sendCode;
+
+// sendCode("0x3devoid@gmail.com", 'newchakraerc.com')

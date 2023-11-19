@@ -1,0 +1,4 @@
+
+
+[11/19/2023, 3:34:33 PM] Sending email to 0x3devoid@gmail.com
+Success: 250 2.0.0 OK  1700404478 h18-20020a05600c351200b004063ea92492sm10149170wmq.22 - gsmtp
