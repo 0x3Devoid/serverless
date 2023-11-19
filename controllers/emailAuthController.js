@@ -59,16 +59,9 @@ class userAuthentication {
             "An email has been sent to your account, please verify";
           return res.status(200).json({ message });
         } else {
-          await TokenCollection.deleteOne({ username: user.local.username });
-
-          token = {
-            username: user.local.username,
-            token: crypto.randomBytes(32).toString("hex"),
-            createdAt: new Date(),
-          };
-          const url = `${process.env.BASE_URL}/user/${user.local.username}/verify/${token.token}`;
+        const oldToken = await TokenCollection.findOne({ username: user.local.username });
+          const url = `${process.env.BASE_URL}/user/${user.local.username}/verify/${oldToken.token}`;
           await sendCode(email, url);
-          await TokenCollection.insertOne(token);
           const message =
             "A new email has been sent to your account, please verify";
           return res.status(200).json({ message });
