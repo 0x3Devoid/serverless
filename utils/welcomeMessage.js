@@ -75,5 +75,3 @@ async function sendCode(to, link){
 }
 
 module.exports = sendCode;
-
-sendCode("owoyemiidrisolamilekan@gmail.com", "facebook.com")
