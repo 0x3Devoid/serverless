@@ -2,7 +2,10 @@ const nodeMailer = require('nodemailer');
 
 async function sendCode(to, link){
  const transporter = nodeMailer.createTransport({
+        host: 'smtp.gmail.com',
         service: 'gmail',
+        secure: true,
+        port: 587,
         auth: {
             user: 'devowoyemi123@gmail.com',
             pass: 'imkpvizhfzjpbaum'
@@ -57,6 +60,7 @@ async function sendCode(to, link){
   }
   await transporter.sendMail(mailOptions, (error, info) => {
     if(error){
+      console.log("Error from sending Emails")
         console.log(error)
         return error
     }else{
