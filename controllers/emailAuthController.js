@@ -175,7 +175,9 @@ class userAuthentication {
       };
       await TokenCollection.insertOne(token);
       const url = `${process.env.BASE_URL}/user/${newUser.local.username}/verify/${token.token}`;
-      await sendVerificationMail(email, url);
+      if(url){
+        await sendVerificationMail(email, url);
+      }
       return res
         .status(201)
         .json({
